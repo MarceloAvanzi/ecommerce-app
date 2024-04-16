@@ -1,35 +1,15 @@
-// @ts-nocheck
-
-export function validateCpf(rawCpf) {
-    if (!rawCpf) return false;
-    const cleanCpf = rawCpf.replace(/\D/g,"");
-    if (isInvalidLength(cleanCpf)) return false;
-    if (allDigitsTheSame(cleanCpf)) return false;
-    const digit1 = calculateDigit(cleanCpf, 10);
-    const digit2 = calculateDigit(cleanCpf, 11);
-    const actualDigit = extractsDigits(cleanCpf);
-    const validatedDigit = `${digit1}${digit2}`
-    return actualDigit === validatedDigit;
-}
-
-function calculateDigit(cpf: string, factor: number) {
-    let total = 0;
-    for(const digit of cpf) {
-        if(factor > 1) total += digit * factor--;
+import express from "express";
+import { validate } from "./cpfValidator";
+const app = express();
+app.use(express.json());
+app.post('/checkout', function(req, res) {
+    const isValid = validate(req.body.cpf);
+    if(!isValid){
+        res.status(422).json({
+            message: 'Invalid cpf'
+        })
+    } else {
+        res.end();
     }
-    const rest = total%11;
-    return (rest < 2) ? 0 : 11 - rest;
-}
-
-function isInvalidLength(cpf: string) {
-    return cpf.length !== 11
-}
-
-function allDigitsTheSame(cpf: string) {
-    const [firstDigit] = cpf;
-    return [...cpf].every(digit => digit === firstDigit);
-}
-
-function extractsDigits(cpf: string) {
-    return cpf.slice(9);
-}
+})
+app.listen(3001);
