@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: eccomerce_app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql 
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-data:
+    driver: local
