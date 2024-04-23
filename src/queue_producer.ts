@@ -13,6 +13,8 @@ async function init() {
         ]
     };
     channel.sendToQueue('checkout', Buffer.from(JSON.stringify(input)));
+
+    console.log('Published')
 }
 
 init();
