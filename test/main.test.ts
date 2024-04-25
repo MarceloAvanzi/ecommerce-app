@@ -110,7 +110,7 @@ test('Deve fazer um pedido calculando o frete', async function (){
     expect(output.total).toBe(1030);
 });
 
-test('Deve fazer um pedido calculando o frete', async function (){
+test('Deve fazer um pedido calculando o frete minimo', async function (){
     const input = {
         cpf: '987.654.321-00',
         items: [
