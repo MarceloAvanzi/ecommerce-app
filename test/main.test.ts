@@ -32,7 +32,7 @@ test('Nao deve fazer pedido com produto que nao existe', async function (){
     const input = {
         cpf: '987.654.321-00',
         items: [
-            {idProduct: 4, quantity: 1},
+            {idProduct: 5, quantity: 1},
         ]
     };
     const response = await axios.post('http://localhost:3001/checkout', input);
