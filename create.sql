@@ -1,9 +1,11 @@
 -- psql -d eccommerce_app -U app
 -- \i /docker-entrypoint-initdb.d/create.sql
 
--- drop table eccommerce_app.product;
--- drop table eccommerce_app.coupons;
--- drop schema eccommerce_app;
+drop table eccommerce_app.product;
+drop table eccommerce_app.coupons;
+drop table eccommerce_app.order;
+drop table eccommerce_app.item;
+drop schema eccommerce_app;
 
 create schema eccommerce_app;
 
@@ -31,3 +33,24 @@ create table eccommerce_app.coupons (
 
 insert into eccommerce_app.coupons (code, percentage, expire_date) values ('VALE20', 20, '2024-04-30');
 insert into eccommerce_app.coupons (code, percentage, expire_date) values ('VALE20_EXPIRED', 20, '2024-03-30');
+
+create table eccommerce_app.order (
+    id_order serial primary key,
+    coupon_code text,
+    coupon_percentage numeric,
+    code text,
+    cpf text,
+    email text,
+    issue_date timestamp,
+    freight numeric,
+    total numeric,
+    sequence integer
+);
+
+create table eccommerce_app.item (
+    id_order integer references eccommerce_app.order (id_order),
+    id_product integer references eccommerce_app.product (id_product),
+    price numeric,
+    quantity integer,
+    primary key (id_order, id_product)
+);

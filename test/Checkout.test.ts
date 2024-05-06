@@ -4,6 +4,7 @@ import CouponDataDatabase from "../src/CouponDataDatabase";
 import CurrencyGateway from "../src/CurrencyGatewayRandom";
 import Mailer from "../src/Mailer";
 import MailerConsole from "../src/MailerConsole";
+import OrderData from "../src/OrderData";
 import ProductData from "../src/ProductData";
 import ProductDataDatabase from "../src/ProductDataDatabase";
 import sinon from 'sinon';
@@ -40,8 +41,14 @@ test('Deve fazer um pedido com 3 produtos', async function () {
         }
     }
 
-    const checkout = new Checkout(productData, couponData);
+    const orderData: OrderData = {
+        async save (order: any): Promise<void> {
+        },
+        async getByCpf (cpf: string): Promise<any> {
+        }
+    }
 
+    const checkout = new Checkout(productData, couponData, orderData);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6350);
 });
@@ -88,7 +95,13 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
         }
     }
 
-    const checkout = new Checkout(productData, couponData);
+    const orderData: OrderData = {
+        async save (order: any): Promise<void> {
+        },
+        async getByCpf (cpf: string): Promise<any> {
+        }
+    }
+    const checkout = new Checkout(productData, couponData, orderData);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6580);
     expect(mailerSpy.calledOnce).toBeTruthy();
@@ -144,7 +157,14 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
         }
     }
 
-    const checkout = new Checkout(productData, couponData);
+    const orderData: OrderData = {
+        async save (order: any): Promise<void> {
+        },
+        async getByCpf (cpf: string): Promise<any> {
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6580);
     currencyGatewayMock.restore();
@@ -204,7 +224,14 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
         }
     }
 
-    const checkout = new Checkout(productData, couponData, currencyGateway, mailer);
+    const orderData: OrderData = {
+        async save (order: any): Promise<void> {
+        },
+        async getByCpf (cpf: string): Promise<any> {
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData, currencyGateway, mailer);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6580);
     expect(log).toHaveLength(1);
