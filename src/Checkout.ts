@@ -1,6 +1,8 @@
+import Coupon from "./Coupon";
 import CouponData from "./CouponData";
 import CurrencyGatewayRandom from "./CurrencyGatewayRandom";
 import CurrencyGateway from "./CurrencyGatewayRandom";
+import FreightCalculator from "./FreightCalculator";
 import MailerConsole from "./MailerConsole";
 import Mailer from "./MailerConsole";
 import OrderData from "./OrderData";
@@ -48,20 +50,17 @@ export default class Checkout {
                     throw new Error('Quantity must be positive');
                 }
                 total += parseFloat(product.price) * (currencies[product.currency] || 1) * item.quantity;
-                const volume = (product.width / 100) * (product.height / 100) * (product.length / 100);
-                const density = parseFloat(product.weight) / volume;
-                const itemFreight = 1000 * volume * (density / 100);
-                freight += (itemFreight >= 10) ? itemFreight : 10;
+                freight += FreightCalculator.calculate(product);
             } else {
                 throw new Error('Product not found');
             };
         };
 
         if (input.coupon) {
-            const coupon = await this.couponData.getCoupon(input.coupon)
-            const today = new Date();
-            if (coupon && (coupon.expire_date.getTime() > today.getTime())) {
-                total -= (total * coupon?.percentage) / 100;
+            const couponData = await this.couponData.getCoupon(input.coupon)
+            const coupon = new Coupon(couponData.code, parseFloat(couponData.percentage), couponData.expire_date);
+            if (coupon && !coupon.isExpired()) {
+                total -= coupon.getDiscount(total);
             }
         }
         if (input.email) {
@@ -69,8 +68,14 @@ export default class Checkout {
         }
 
         total += freight;
+        const today = new Date();
+        const year = today.getFullYear();
+        const sequence = await this.orderData.count();
+        const code = `${year}${new String(sequence + 1).padStart(8,'0')}`;
+
         await this.orderData.save({cpf: input.cpf, total})
         return {
+            code,
             total,
         };
     };

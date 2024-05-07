@@ -13,5 +13,10 @@ export default class OrderDataDatabase implements OrderData {
         await connection.$pool.end()
         return orderData;
     }
-
+    async count(): Promise<number> {
+        const connection = pgp()('postgres://app:app@localhost:5432/eccommerce_app');
+        const [options] = await connection.query('select count(*)::integer as count from eccommerce_app.order', []);
+        await connection.$pool.end()
+        return options.count;
+    }
 }
