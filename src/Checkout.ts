@@ -5,6 +5,7 @@ import CurrencyGateway from "./CurrencyGatewayRandom";
 import FreightCalculator from "./FreightCalculator";
 import MailerConsole from "./MailerConsole";
 import Mailer from "./MailerConsole";
+import OrderCode from "./OrderCode";
 import OrderData from "./OrderData";
 import ProductData from "./ProductData";
 import { validate } from "./cpfValidator";
@@ -69,9 +70,9 @@ export default class Checkout {
 
         total += freight;
         const today = new Date();
-        const year = today.getFullYear();
-        const sequence = await this.orderData.count();
-        const code = `${year}${new String(sequence + 1).padStart(8,'0')}`;
+        const sequence = await this.orderData.count()  + 1;
+        const orderCode = new OrderCode(today, sequence)
+        const code = orderCode.getValue()
 
         await this.orderData.save({cpf: input.cpf, total})
         return {
