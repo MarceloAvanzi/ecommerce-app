@@ -11,7 +11,7 @@ test('Não deve fazer um pedido com cpf inválido', async function (){
     const response = await axios.post('http://localhost:3001/checkout', input);
     expect(response.status).toBe(422);
     const output = response.data;
-    expect(output.message).toBe('Invalid cpf');
+    expect(output.message).toBe('Invalid CPF');
 });
 
 test('Deve fazer um pedido com 3 produtos', async function (){

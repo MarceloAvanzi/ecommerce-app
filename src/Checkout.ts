@@ -5,6 +5,7 @@ import CurrencyGateway from "./CurrencyGatewayRandom";
 import FreightCalculator from "./FreightCalculator";
 import MailerConsole from "./MailerConsole";
 import Mailer from "./MailerConsole";
+import Order from "./Order";
 import OrderCode from "./OrderCode";
 import OrderData from "./OrderData";
 import ProductData from "./ProductData";
@@ -26,58 +27,24 @@ export default class Checkout {
         readonly orderData: OrderData,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
-    ) {
-
-    }
+    ) { }
 
     async execute(input: Input) {
-        const isValid = validate(input.cpf);
-        if (!isValid) {
-            throw new Error('Invalid cpf');
-        };
-
-        let total = 0;
-        let freight = 0;
-        const currencies: any = await this.currencyGateway.getCurrencies();
-        const productsIds: number[] = [];
+        const currencies = await this.currencyGateway.getCurrencies()
+        const order = new Order(input.cpf)
         for (const item of input.items) {
-            if (productsIds.some(idProduct => idProduct === item.idProduct)) {
-                throw new Error('Duplicated Product');
-            }
-            productsIds.push(item.idProduct);
-            const product = await this.productData.getProduct(item.idProduct);
-            if (product) {
-                if (item.quantity <= 0) {
-                    throw new Error('Quantity must be positive');
-                }
-                total += parseFloat(product.price) * (currencies[product.currency] || 1) * item.quantity;
-                freight += FreightCalculator.calculate(product);
-            } else {
-                throw new Error('Product not found');
-            };
-        };
-
+            const product = await this.productData.getProduct(item.idProduct)
+            order.addItem(product, item.quantity, product.currency, currencies.getCurrency(product.currency))
+        }
         if (input.coupon) {
-            const couponData = await this.couponData.getCoupon(input.coupon)
-            const coupon = new Coupon(couponData.code, parseFloat(couponData.percentage), couponData.expire_date);
-            if (coupon && !coupon.isExpired()) {
-                total -= coupon.getDiscount(total);
-            }
-        }
-        if (input.email) {
-            this.mailer.send(input.email, 'Checkout Success', "ABCDEF")
+            const coupon = await this.couponData.getCoupon(input.coupon)
+            order.addCoupon(coupon)
         }
 
-        total += freight;
-        const today = new Date();
-        const sequence = await this.orderData.count()  + 1;
-        const orderCode = new OrderCode(today, sequence)
-        const code = orderCode.getValue()
-
-        await this.orderData.save({cpf: input.cpf, total})
+        await this.orderData.save(order)
         return {
-            code,
-            total,
+            code: order.getCode(),
+            total: order.getTotal(),
         };
     };
 }

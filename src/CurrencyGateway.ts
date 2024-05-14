@@ -1,3 +1,5 @@
+import Currencies from "./Currencies";
+
 export default interface CurrencyGateway {
-    getCurrencies(): Promise<any>;
+    getCurrencies(): Promise<Currencies>;
 }

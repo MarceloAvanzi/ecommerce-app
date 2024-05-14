@@ -40,7 +40,7 @@ export default class Cpf {
         return cpf.slice(9);
     }
 
-    private getValue() {
+    getValue() {
         return this.value
     }
 }

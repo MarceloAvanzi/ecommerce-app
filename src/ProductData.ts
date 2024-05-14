@@ -1,3 +1,5 @@
+import Product from "./Product";
+
 export default interface ProductData {
-    getProduct (idProduct: number): Promise<any>;
+    getProduct(idProduct: number): Promise<Product>;
 }
