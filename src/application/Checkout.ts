@@ -1,15 +1,15 @@
-import Coupon from "./Coupon";
-import CouponData from "./CouponData";
-import CurrencyGatewayRandom from "./CurrencyGatewayRandom";
-import CurrencyGateway from "./CurrencyGatewayRandom";
-import FreightCalculator from "./FreightCalculator";
-import MailerConsole from "./MailerConsole";
-import Mailer from "./MailerConsole";
-import Order from "./Order";
-import OrderCode from "./OrderCode";
-import OrderData from "./OrderData";
-import ProductData from "./ProductData";
-import { validate } from "./cpfValidator";
+import Coupon from "../domain/entities/Coupon";
+import CouponData from "../domain/data/CouponData";
+import CurrencyGatewayRandom from "../infrastructure/gateway/CurrencyGatewayRandom";
+import CurrencyGateway from "../infrastructure/gateway/CurrencyGatewayRandom";
+import FreightCalculator from "../domain/entities/FreightCalculator";
+import MailerConsole from "../infrastructure/mailer/MailerConsole";
+import Mailer from "../infrastructure/mailer/MailerConsole";
+import Order from "../domain/entities/Order";
+import OrderCode from "../domain/entities/OrderCode";
+import OrderData from "../domain/data/OrderData";
+import ProductData from "../domain/data/ProductData";
+import { validate } from "../domain/entities/cpfValidator";
 // import { getCoupon, getProduct } from "./resource";
 
 type Input = {

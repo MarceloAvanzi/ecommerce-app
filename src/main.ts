@@ -1,27 +1,16 @@
-import express from "express";
-import Checkout from "./Checkout";
-import ProductDataDatabase from "./ProductDataDatabase";
-import CouponDataDatabase from "./CouponDataDatabase";
-import OrderDataDatabase from "./OrderDataDatabase";
-const app = express();
-app.use(express.json());
+import Checkout from "./application/Checkout";
+import ProductDataDatabase from "./infrastructure/data/ProductDataDatabase";
+import CouponDataDatabase from "./infrastructure/data/CouponDataDatabase";
+import OrderDataDatabase from "./infrastructure/data/OrderDataDatabase";
+import PgPromiseConnection from "./infrastructure/database/PgPromiseConnection";
+import ExpressHttpServer from "./infrastructure/http/ExpressHttpServer";
+import RestController from "./infrastructure/controller/RestController";
 
-app.post('/checkout', async function (req, res) {
-    const input = req.body;
-    try {
-        const productData = new ProductDataDatabase();
-        const couponData = new CouponDataDatabase();
-        const orderData = new OrderDataDatabase();
-        const checkout = new Checkout(productData, couponData, orderData);
-        const output = await checkout.execute(input);
-        res.json(output);
-    } catch (error: any) {
-        res.status(422).json({
-            message: error.message
-        });
-    }
-});
-
-app.listen(3001, () => {
-    console.log('Server Running on PORT 3001');
-});
+const connection = new PgPromiseConnection();
+const httpServer = new ExpressHttpServer();
+const productData = new ProductDataDatabase(connection);
+const couponData = new CouponDataDatabase(connection);
+const orderData = new OrderDataDatabase(connection);
+const checkout = new Checkout(productData, couponData, orderData);
+new RestController(httpServer, checkout);
+httpServer.listen(3001);

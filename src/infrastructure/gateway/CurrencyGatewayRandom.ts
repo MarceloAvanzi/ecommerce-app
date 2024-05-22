@@ -1,4 +1,4 @@
-import Currencies from "./Currencies";
+import Currencies from "../../domain/entities/Currencies";
 import CurrencyGateway from "./CurrencyGateway";
 
 export default class CurrencyGatewayRandom implements CurrencyGateway {

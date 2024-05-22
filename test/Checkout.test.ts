@@ -1,13 +1,13 @@
-import Checkout from "../src/Checkout";
-import CouponData from "../src/CouponData";
-import CouponDataDatabase from "../src/CouponDataDatabase";
-import Currencies from "../src/Currencies";
-import CurrencyGateway from "../src/CurrencyGatewayRandom";
-import Mailer from "../src/Mailer";
-import MailerConsole from "../src/MailerConsole";
-import OrderData from "../src/OrderData";
-import ProductData from "../src/ProductData";
-import ProductDataDatabase from "../src/ProductDataDatabase";
+import Checkout from "../src/application/Checkout";
+import CouponData from "../src/domain/data/CouponData";
+import CouponDataDatabase from "../src/infrastructure/data/CouponDataDatabase";
+import Currencies from "../src/domain/entities/Currencies";
+import CurrencyGateway from "../src/infrastructure/gateway/CurrencyGatewayRandom";
+import Mailer from "../src/infrastructure/mailer/Mailer";
+import MailerConsole from "../src/infrastructure/mailer/MailerConsole";
+import OrderData from "../src/domain/data/OrderData";
+import ProductData from "../src/domain/data/ProductData";
+import ProductDataDatabase from "../src/infrastructure/data/ProductDataDatabase";
 import sinon from 'sinon';
 
 test('Deve fazer um pedido com 3 produtos', async function () {

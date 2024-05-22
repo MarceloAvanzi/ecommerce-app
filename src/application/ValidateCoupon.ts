@@ -1,5 +1,5 @@
-import Coupon from "./Coupon";
-import CouponData from "./CouponData";
+import Coupon from "../domain/entities/Coupon";
+import CouponData from "../domain/data/CouponData";
 
 type Output = {
     isExpired: boolean,

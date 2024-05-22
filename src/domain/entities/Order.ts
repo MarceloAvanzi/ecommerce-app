@@ -5,7 +5,7 @@ import FreightCalculator from "./FreightCalculator"
 import Item from "./Item"
 import OrderCode from "./OrderCode"
 import Product from "./Product"
-import ProductData from "./ProductData"
+import ProductData from "../data/ProductData"
 
 export default class Order {
     cpf: Cpf
