@@ -1,23 +1,14 @@
 import FreightCalculator from "../src/domain/entities/FreightCalculator"
+import Product from "../src/domain/entities/Product"
 
-test('Deve calcular o frete', function(){
-    const product ={ 
-        width: 100,
-        height: 30,
-        length: 10,
-        weight: 3
-    }
+test('Deve calcular o frete', function () {
+    const product = new Product(1, 'A', 1000, 100, 30, 10, 3);
     const freight = FreightCalculator.calculate(product)
     expect(freight).toBe(30)
 })
 
-test('Deve calcular o frete minimo', function(){
-    const product ={ 
-        width: 10,
-        height: 10,
-        length: 10,
-        weight: 0.9
-    }
+test('Deve calcular o frete minimo', function () {
+    const product = new Product(3, 'C', 10, 10, 10, 10, 0.9)
     const freight = FreightCalculator.calculate(product)
     expect(freight).toBe(10)
 })
