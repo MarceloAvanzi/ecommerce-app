@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "npx nodemon src/main.ts",
     "cli": "npx ts-node src/cli.ts",
+    "main_cli": "npx ts-node src/main_cli.ts",
     "test": "npx jest",
     "test:watch": "npx jest --watchAll"
   },
