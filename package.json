@@ -6,9 +6,10 @@
   "author": "MarceloAvanzi <marcelodaniel@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "npx nodemon src/main.ts",
-    "cli": "npx ts-node src/cli.ts",
-    "main_cli": "npx ts-node src/main_cli.ts",
+    "dev": "npx nodemon src/main_api.ts",
+    "cli": "npx ts-node src/main_cli.ts",
+    "queue:consumer": "npx ts-node src/main_queue.ts",
+    "queue:producer": "npx ts-node src/queue_producer.ts",
     "test": "npx jest",
     "test:watch": "npx jest --watchAll"
   },
