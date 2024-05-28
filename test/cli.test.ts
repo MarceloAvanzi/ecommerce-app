@@ -1,6 +1,7 @@
 import Checkout from "../src/application/Checkout";
 import CLIController from "../src/infrastructure/cli/CLIController";
 import CLIHandler from "../src/infrastructure/cli/CLIHandler";
+import CLIHandlerMemory from "../src/infrastructure/cli/CLIHandlerMemory";
 import CouponDataDatabase from "../src/infrastructure/data/CouponDataDatabase";
 import OrderDataDatabase from "../src/infrastructure/data/OrderDataDatabase";
 import ProductDataDatabase from "../src/infrastructure/data/ProductDataDatabase";
@@ -14,7 +15,7 @@ test('Deve testar o cli', async function () {
     const orderData = new OrderDataDatabase(connection);
     const checkout = new Checkout(productData, couponData, orderData);
     const checkoutSpy = sinon.spy(checkout, 'execute');
-    const handler = new CLIHandler();
+    const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);
     await handler.type('set-cpf 987.654.321-00');
     await handler.type('add-item 1 1');

@@ -1,4 +1,4 @@
-export default class CLIHandler {
+export default abstract class CLIHandler {
     commands: { [command: string]: Function } = {};
 
     on(command: string, callback: Function) {
@@ -11,4 +11,6 @@ export default class CLIHandler {
         const params = text.replace(command, '').trim();
         await this.commands[command](params)
     }
+
+    abstract write(text: string): void;
 }

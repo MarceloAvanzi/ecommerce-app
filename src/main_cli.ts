@@ -1,6 +1,7 @@
 import Checkout from "./application/Checkout";
 import CLIController from "./infrastructure/cli/CLIController";
 import CLIHandler from "./infrastructure/cli/CLIHandler";
+import CLIHandlerNode from "./infrastructure/cli/CLIHandlerNode";
 import CouponDataDatabase from "./infrastructure/data/CouponDataDatabase";
 import OrderDataDatabase from "./infrastructure/data/OrderDataDatabase";
 import ProductDataDatabase from "./infrastructure/data/ProductDataDatabase";
@@ -11,5 +12,5 @@ const productData = new ProductDataDatabase(connection);
 const couponData = new CouponDataDatabase(connection);
 const orderData = new OrderDataDatabase(connection);
 const checkout = new Checkout(productData, couponData, orderData);
-const handler = new CLIHandler();
+const handler = new CLIHandlerNode();
 new CLIController(handler, checkout);
