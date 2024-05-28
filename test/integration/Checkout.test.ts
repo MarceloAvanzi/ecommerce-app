@@ -1,15 +1,15 @@
-import Checkout from "../src/application/Checkout";
-import CouponData from "../src/domain/data/CouponData";
-import CouponDataDatabase from "../src/infrastructure/data/CouponDataDatabase";
-import Currencies from "../src/domain/entities/Currencies";
-import CurrencyGateway from "../src/infrastructure/gateway/CurrencyGatewayRandom";
-import Mailer from "../src/infrastructure/mailer/Mailer";
-import MailerConsole from "../src/infrastructure/mailer/MailerConsole";
-import OrderData from "../src/domain/data/OrderData";
-import ProductData from "../src/domain/data/ProductData";
-import ProductDataDatabase from "../src/infrastructure/data/ProductDataDatabase";
+import Checkout from "../../src/application/Checkout";
+import CouponData from "../../src/domain/data/CouponData";
+import CouponDataDatabase from "../../src/infrastructure/data/CouponDataDatabase";
+import Currencies from "../../src/domain/entities/Currencies";
+import CurrencyGateway from "../../src/infrastructure/gateway/CurrencyGatewayRandom";
+import Mailer from "../../src/infrastructure/mailer/Mailer";
+import MailerConsole from "../../src/infrastructure/mailer/MailerConsole";
+import OrderData from "../../src/domain/data/OrderData";
+import ProductData from "../../src/domain/data/ProductData";
+import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
 import sinon from 'sinon';
-import Product from "../src/domain/entities/Product";
+import Product from "../../src/domain/entities/Product";
 
 test('Deve fazer um pedido com 3 produtos', async function () {
     const input = {

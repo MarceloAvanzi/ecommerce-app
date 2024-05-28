@@ -1,4 +1,4 @@
-import Coupon from "../src/domain/entities/Coupon"
+import Coupon from "../../src/domain/entities/Coupon"
 
 test('Deve testar o cupom', function() {
     const coupon = new Coupon('VALE20', 20, new Date('2024-12-10T10:00:00'));

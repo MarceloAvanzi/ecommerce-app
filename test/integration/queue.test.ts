@@ -1,11 +1,11 @@
 import sinon from "sinon";
-import Checkout from "../src/application/Checkout";
-import CouponDataDatabase from "../src/infrastructure/data/CouponDataDatabase";
-import OrderDataDatabase from "../src/infrastructure/data/OrderDataDatabase";
-import ProductDataDatabase from "../src/infrastructure/data/ProductDataDatabase";
-import PgPromiseConnection from "../src/infrastructure/database/PgPromiseConnection";
-import QueueController from "../src/infrastructure/queue/QueueController";
-import QueueMemory from "../src/infrastructure/queue/QueueMemory";
+import Checkout from "../../src/application/Checkout";
+import CouponDataDatabase from "../../src/infrastructure/data/CouponDataDatabase";
+import OrderDataDatabase from "../../src/infrastructure/data/OrderDataDatabase";
+import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
+import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
+import QueueController from "../../src/infrastructure/queue/QueueController";
+import QueueMemory from "../../src/infrastructure/queue/QueueMemory";
 
 test('Deve testar com a fila', async function () {
     const queue = new QueueMemory();

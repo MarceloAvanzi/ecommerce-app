@@ -1,9 +1,9 @@
-import Checkout from "../src/application/Checkout"
-import CouponDataDatabase from "../src/infrastructure/data/CouponDataDatabase";
-import GetOrderByCpf from "../src/application/GetOrderByCpf";
-import OrderDataDatabase from "../src/infrastructure/data/OrderDataDatabase";
-import ProductDataDatabase from "../src/infrastructure/data/ProductDataDatabase";
-import PgPromiseConnection from "../src/infrastructure/database/PgPromiseConnection";
+import Checkout from "../../src/application/Checkout"
+import CouponDataDatabase from "../../src/infrastructure/data/CouponDataDatabase";
+import GetOrderByCpf from "../../src/application/GetOrderByCpf";
+import OrderDataDatabase from "../../src/infrastructure/data/OrderDataDatabase";
+import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
+import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 
 test('Deve consultar um pedido', async function () {
     const connection = new PgPromiseConnection();

@@ -1,6 +1,6 @@
-import Coupon from "../src/domain/entities/Coupon"
-import Order from "../src/domain/entities/Order"
-import Product from "../src/domain/entities/Product"
+import Coupon from "../../src/domain/entities/Coupon"
+import Order from "../../src/domain/entities/Order"
+import Product from "../../src/domain/entities/Product"
 
 test('Deve criar um pedido vazio com CPF valido', function () {
     const order = new Order('987.654.321-00')
