@@ -24,16 +24,27 @@ const getTotal = function () {
   return total
 };
 
+const getProductById = function (idProduct: number) {
+  return products.find((product) => product.idProduct === idProduct);
+}
+
+const formatMoney = function (amount: number) {
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD' }).format(amount);
+}
+
 </script>
 
 <template>
   <div class="title">Checkout</div>
   <div v-for="product in products">
     <span class="product-description">{{ product.description }}</span>
-    <span class="product-price">{{ product.price }}</span>
+    <span class="product-price">{{ formatMoney(product.price) }}</span>
     <button class="product-add-button" @click='addItem(product)'>add</button>
   </div>
-  <div class="total">{{ getTotal() }}</div>
+  <div class="total">{{ formatMoney(getTotal()) }}</div>
+  <div v-for="item in order.items">
+    <span class="item-description">{{ getProductById(item.idProduct).description }}</span>
+  </div>
 </template>
 
 <style scoped></style>
