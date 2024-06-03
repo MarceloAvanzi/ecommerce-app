@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 const products = reactive([
   { idProduct: 1, description: 'A', price: 1000 },
@@ -8,9 +8,11 @@ const products = reactive([
 ]);
 
 const order = reactive({
-  total: 0,
-  items: []
+  code: "",
+  items: [] as any
 });
+
+const message = ref("");
 
 const addItem = function (product: any) {
   const existingItem = order.items.find((item) => item.idProduct === product.idProduct)
@@ -52,6 +54,10 @@ const formatMoney = function (amount: number) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD' }).format(amount);
 }
 
+const confirm = function (order: any) {
+  message.value = 'Success';
+  order.code = '202400000001'
+}
 </script>
 
 <template>
@@ -68,6 +74,9 @@ const formatMoney = function (amount: number) {
     <button class="item-increase-button" @click='increaseItem(item.idProduct)'>+</button>
     <button class="item-decrease-button" @click='decreaseItem(item.idProduct)'>-</button>
   </div>
+  <button class="confirm" @click="confirm(order)">confirm</button>
+  <div class="message">{{ message }}</div>
+  <div class="order-code">{{ order.code }}</div>
 </template>
 
 <style scoped></style>

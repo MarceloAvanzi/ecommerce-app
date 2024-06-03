@@ -21,7 +21,6 @@ test('Deve ter um pedido com um item', async function () {
     expect(wrapper.get('.total').text()).toBe('$1,000.00');
     expect(wrapper.findAll('.item-description').at(0)?.text()).toBe('A');
     expect(wrapper.findAll('.item-quantity').at(0)?.text()).toBe('1');
-
 })
 
 test('Deve ter um pedido com varios itens e quantidade acima de 1', async function () {
@@ -80,4 +79,13 @@ test('Deve ter um pedido com varios itens e decrementar a quantidade do item do 
     await wrapper.findAll('.item-decrease-button').at(0)?.trigger('click');
     expect(wrapper.findAll('.item-quantity').at(0)?.text()).toBeUndefined();
     expect(wrapper.get('.total').text()).toBe('$0.00');
+})
+
+test('Deve confirmar um pedido com um item', async function () {
+    const wrapper = mount(AppVue, {
+    });
+    await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
+    await wrapper.get('.confirm').trigger('click');
+    expect(wrapper.get('.message').text()).toBe('Success');
+    expect(wrapper.get('.order-code').text()).toBe('202400000001');
 })
