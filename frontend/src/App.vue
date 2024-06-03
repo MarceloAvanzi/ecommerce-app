@@ -13,13 +13,18 @@ const order = reactive({
 });
 
 const addItem = function (product: any) {
-  order.items.push({ idProduct: product.idProduct, price: product.price, quantity: 1 })
+  const existingItem = order.items.find((item) => item.idProduct === product.idProduct)
+  if (!existingItem) {
+    order.items.push({ idProduct: product.idProduct, price: product.price, quantity: 1 })
+  } else {
+    existingItem.quantity++
+  }
 };
 
 const getTotal = function () {
   let total = 0;
   for (const item of order.items) {
-    total += item.price
+    total += item.price * item.quantity;
   }
   return total
 };
@@ -44,6 +49,7 @@ const formatMoney = function (amount: number) {
   <div class="total">{{ formatMoney(getTotal()) }}</div>
   <div v-for="item in order.items">
     <span class="item-description">{{ getProductById(item.idProduct).description }}</span>
+    <span class="item-quantity">{{ item.quantity }}</span>
   </div>
 </template>
 

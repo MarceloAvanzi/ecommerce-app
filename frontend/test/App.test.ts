@@ -19,6 +19,9 @@ test('Deve testar o frontend', async function () {
     expect(wrapper.get('.total').text()).toBe('$6,090.00');
 
     expect(wrapper.findAll('.item-description').at(0)?.text()).toBe('A');
+    expect(wrapper.findAll('.item-quantity').at(0)?.text()).toBe('1');
     expect(wrapper.findAll('.item-description').at(1)?.text()).toBe('B');
+    expect(wrapper.findAll('.item-quantity').at(1)?.text()).toBe('1');
     expect(wrapper.findAll('.item-description').at(2)?.text()).toBe('C');
+    expect(wrapper.findAll('.item-quantity').at(2)?.text()).toBe('3');
 })
