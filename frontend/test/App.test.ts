@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import AppVue from '../src/App.vue'
+import CheckoutGatewayHttp from '../src/infra/gateway/CheckoutGatewayHttp';
 
 function sleep(time: number) {
     return new Promise((resolve) => {
@@ -10,7 +11,13 @@ function sleep(time: number) {
 }
 
 test('Deve ter um pedido vazio', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     expect(wrapper.get('.title').text()).toBe('Checkout');
     expect(wrapper.get('.title').text()).toBe('Checkout');
@@ -24,7 +31,13 @@ test('Deve ter um pedido vazio', async function () {
 })
 
 test('Deve ter um pedido com um item', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     expect(wrapper.get('.total').text()).toBe('$1,000.00');
@@ -33,7 +46,13 @@ test('Deve ter um pedido com um item', async function () {
 })
 
 test('Deve ter um pedido com varios itens e quantidade acima de 1', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     await wrapper.findAll('.product-add-button').at(1)?.trigger('click');
@@ -51,7 +70,13 @@ test('Deve ter um pedido com varios itens e quantidade acima de 1', async functi
 })
 
 test('Deve ter um pedido com varios itens e decrementar a quantidade do item do pedido', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     await wrapper.findAll('.product-add-button').at(1)?.trigger('click');
@@ -66,7 +91,13 @@ test('Deve ter um pedido com varios itens e decrementar a quantidade do item do 
 })
 
 test('Deve ter um pedido com varios itens e incrementar a quantidade do item do pedido', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
 
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
@@ -80,7 +111,13 @@ test('Deve ter um pedido com varios itens e incrementar a quantidade do item do 
 })
 
 test('Deve ter um pedido com varios itens e decrementar a quantidade do item do pedido e nao permitir que a quantidade seja menor que zero', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
 
@@ -91,7 +128,13 @@ test('Deve ter um pedido com varios itens e decrementar a quantidade do item do 
 })
 
 test('Deve confirmar um pedido com um item', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     await wrapper.get('.confirm').trigger('click');
@@ -102,7 +145,13 @@ test('Deve confirmar um pedido com um item', async function () {
 })
 
 test('Deve ter 4 produtos', async function () {
+    const checkoutGateway = new CheckoutGatewayHttp();
     const wrapper = mount(AppVue, {
+        global: {
+            provide: {
+                checkoutGateway
+            }
+        }
     });
     await sleep(100);
     expect(wrapper.get('.title').text()).toBe('Checkout');
