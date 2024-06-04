@@ -1,5 +1,14 @@
 import { mount } from '@vue/test-utils'
 import AppVue from '../src/App.vue'
+
+function sleep(time: number) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true)
+        }, time);
+    })
+}
+
 test('Deve ter um pedido vazio', async function () {
     const wrapper = mount(AppVue, {
     });
@@ -63,7 +72,7 @@ test('Deve ter um pedido com varios itens e incrementar a quantidade do item do 
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     expect(wrapper.get('.total').text()).toBe('$1,000.00');
     expect(wrapper.findAll('.item-quantity').at(0)?.text()).toBe('1');
-    
+
     await wrapper.findAll('.item-increase-button').at(0)?.trigger('click');
     await wrapper.findAll('.item-increase-button').at(0)?.trigger('click');
     expect(wrapper.get('.total').text()).toBe('$3,000.00');
@@ -86,6 +95,23 @@ test('Deve confirmar um pedido com um item', async function () {
     });
     await wrapper.findAll('.product-add-button').at(0)?.trigger('click');
     await wrapper.get('.confirm').trigger('click');
+    await sleep(100);
     expect(wrapper.get('.message').text()).toBe('Success');
     expect(wrapper.get('.order-code').text()).toBe('202400000001');
+    expect(wrapper.get('.order-total').text()).toBe('1030');
+})
+
+test('Deve ter 4 produtos', async function () {
+    const wrapper = mount(AppVue, {
+    });
+    await sleep(100);
+    expect(wrapper.get('.title').text()).toBe('Checkout');
+    expect(wrapper.findAll('.product-description').at(0)?.text()).toBe('A');
+    expect(wrapper.findAll('.product-price').at(0)?.text()).toBe('$1,000.00');
+    expect(wrapper.findAll('.product-description').at(1)?.text()).toBe('B');
+    expect(wrapper.findAll('.product-price').at(1)?.text()).toBe('$5,000.00');
+    expect(wrapper.findAll('.product-description').at(2)?.text()).toBe('C');
+    expect(wrapper.findAll('.product-price').at(2)?.text()).toBe('$30.00');
+    expect(wrapper.findAll('.product-description').at(3)?.text()).toBe('D');
+    expect(wrapper.findAll('.product-price').at(3)?.text()).toBe('$1,000.00');
 })

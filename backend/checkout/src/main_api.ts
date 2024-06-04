@@ -13,4 +13,4 @@ const couponData = new CouponDataDatabase(connection);
 const orderData = new OrderDataDatabase(connection);
 const checkout = new Checkout(productData, couponData, orderData);
 new RestController(httpServer, checkout);
-httpServer.listen(3001);
+httpServer.listen(3000);

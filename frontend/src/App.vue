@@ -10,13 +10,15 @@ const products = reactive([
 
 const order = reactive({
   code: "",
-  items: [] as any
+  cpf: "987.654.321-00",
+  items: [] as any,
+  total: 0
 });
 
 const message = ref("");
 
 const addItem = function (product: any) {
-  const existingItem = order.items.find((item) => item.idProduct === product.idProduct)
+  const existingItem = order.items.find((item: any) => item.idProduct === product.idProduct)
   if (!existingItem) {
     order.items.push({ idProduct: product.idProduct, price: product.price, quantity: 1 })
   } else {
@@ -25,7 +27,7 @@ const addItem = function (product: any) {
 };
 
 const decreaseItem = function (idProduct: number) {
-  const existingItem = order.items.find((item) => item.idProduct === idProduct)
+  const existingItem = order.items.find((item: any) => item.idProduct === idProduct)
   if (!existingItem) return
   existingItem.quantity--
   if (existingItem.quantity === 0) {
@@ -34,7 +36,7 @@ const decreaseItem = function (idProduct: number) {
 }
 
 const increaseItem = function (idProduct: number) {
-  const existingItem = order.items.find((item) => item.idProduct === idProduct)
+  const existingItem = order.items.find((item: any) => item.idProduct === idProduct)
   if (!existingItem) return
   existingItem.quantity++
 }
@@ -55,13 +57,16 @@ const formatMoney = function (amount: number) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD' }).format(amount);
 }
 
-const confirm = function (order: any) {
+const confirm = async function (order: any) {
+  const response = await axios.post('http://localhost:3000/checkout', order)
+  const orderData = response.data
+  order.code = orderData.code
+  order.total = orderData.total
   message.value = 'Success';
-  order.code = '202400000001'
 }
 
 onMounted(async () => {
-  const response = await axios.get('http://localhost:3001/products');
+  const response = await axios.get('http://localhost:3000/products');
   const productsData = response.data;
   products.push(...productsData);
 });
@@ -77,7 +82,7 @@ onMounted(async () => {
   </div>
   <div class="total">{{ formatMoney(getTotal()) }}</div>
   <div v-for="item in order.items">
-    <span class="item-description">{{ getProductById(item.idProduct).description }}</span>
+    <span class="item-description">{{ getProductById(item.idProduct)?.description }}</span>
     <span class="item-quantity">{{ item.quantity }}</span>
     <button class="item-increase-button" @click='increaseItem(item.idProduct)'>+</button>
     <button class="item-decrease-button" @click='decreaseItem(item.idProduct)'>-</button>
@@ -85,6 +90,7 @@ onMounted(async () => {
   <button class="confirm" @click="confirm(order)">confirm</button>
   <div class="message">{{ message }}</div>
   <div class="order-code">{{ order.code }}</div>
+  <div class="order-total">{{ order.total }}</div>
 </template>
 
 <style scoped></style>
