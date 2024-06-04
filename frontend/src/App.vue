@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+import axios from 'axios'
 
 const products = reactive([
   { idProduct: 1, description: 'A', price: 1000 },
@@ -58,6 +59,13 @@ const confirm = function (order: any) {
   message.value = 'Success';
   order.code = '202400000001'
 }
+
+onMounted(async () => {
+  const response = await axios.get('http://localhost:3001/products');
+  const productsData = response.data;
+  products.push(...productsData);
+});
+
 </script>
 
 <template>
