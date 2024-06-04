@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref } from 'vue'
 import axios from 'axios'
+import Order from './domain/Order';
+import CheckoutGatewayHttp from './infra/gateway/CheckoutGatewayHttp';
+import CheckoutGateway from './infra/gateway/CheckoutGateway';
 
 const products = reactive([
   { idProduct: 1, description: 'A', price: 1000 },
@@ -8,46 +11,11 @@ const products = reactive([
   { idProduct: 3, description: 'C', price: 30 }
 ]);
 
-const order = reactive({
-  code: "",
-  cpf: "987.654.321-00",
-  items: [] as any,
-  total: 0
-});
+const order = reactive(new Order('987.654.321-00'));
 
 const message = ref("");
 
-const addItem = function (product: any) {
-  const existingItem = order.items.find((item: any) => item.idProduct === product.idProduct)
-  if (!existingItem) {
-    order.items.push({ idProduct: product.idProduct, price: product.price, quantity: 1 })
-  } else {
-    existingItem.quantity++
-  }
-};
 
-const decreaseItem = function (idProduct: number) {
-  const existingItem = order.items.find((item: any) => item.idProduct === idProduct)
-  if (!existingItem) return
-  existingItem.quantity--
-  if (existingItem.quantity === 0) {
-    order.items.splice(order.items.indexOf(existingItem), 1);
-  }
-}
-
-const increaseItem = function (idProduct: number) {
-  const existingItem = order.items.find((item: any) => item.idProduct === idProduct)
-  if (!existingItem) return
-  existingItem.quantity++
-}
-
-const getTotal = function () {
-  let total = 0;
-  for (const item of order.items) {
-    total += item.price * item.quantity;
-  }
-  return total
-};
 
 const getProductById = function (idProduct: number) {
   return products.find((product) => product.idProduct === idProduct);
@@ -57,17 +25,17 @@ const formatMoney = function (amount: number) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'USD' }).format(amount);
 }
 
+const checkoutGateway = inject('checkoutGateway') as CheckoutGateway;
+
 const confirm = async function (order: any) {
-  const response = await axios.post('http://localhost:3000/checkout', order)
-  const orderData = response.data
+  const orderData = await checkoutGateway.checkout(order);
   order.code = orderData.code
   order.total = orderData.total
   message.value = 'Success';
 }
 
 onMounted(async () => {
-  const response = await axios.get('http://localhost:3000/products');
-  const productsData = response.data;
+  const productsData = await checkoutGateway.getProducts();
   products.push(...productsData);
 });
 
@@ -78,14 +46,14 @@ onMounted(async () => {
   <div v-for="product in products">
     <span class="product-description">{{ product.description }}</span>
     <span class="product-price">{{ formatMoney(product.price) }}</span>
-    <button class="product-add-button" @click='addItem(product)'>add</button>
+    <button class="product-add-button" @click='order.addItem(product)'>add</button>
   </div>
-  <div class="total">{{ formatMoney(getTotal()) }}</div>
+  <div class="total">{{ formatMoney(order.getTotal()) }}</div>
   <div v-for="item in order.items">
     <span class="item-description">{{ getProductById(item.idProduct)?.description }}</span>
     <span class="item-quantity">{{ item.quantity }}</span>
-    <button class="item-increase-button" @click='increaseItem(item.idProduct)'>+</button>
-    <button class="item-decrease-button" @click='decreaseItem(item.idProduct)'>-</button>
+    <button class="item-increase-button" @click='order.increaseItem(item.idProduct)'>+</button>
+    <button class="item-decrease-button" @click='order.decreaseItem(item.idProduct)'>-</button>
   </div>
   <button class="confirm" @click="confirm(order)">confirm</button>
   <div class="message">{{ message }}</div>
