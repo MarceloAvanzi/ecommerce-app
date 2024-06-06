@@ -3,6 +3,7 @@ import CalculateFreight from "../../src/application/CalculateFreight";
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import ZipcodeData from "../../src/domain/data/ZipcodeData";
 import Zipcode from "../../src/domain/entities/Zipcode";
+import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
 
 test('Deve simular o frete para um pedido sem CEP de origem e destino', async function () {
     const connection = new PgPromiseConnection();
@@ -28,7 +29,7 @@ test('Deve simular o frete para um pedido sem CEP de origem e destino', async fu
     await connection.close();
 })
 
-test('Deve simular o frete para um pedido com CEP de origem e destino', async function () {
+test('Deve simular o frete para um pedido com CEP de origem e destino usando fake', async function () {
     const connection = new PgPromiseConnection();
     const productData = new ProductDataDatabase(connection);
     const zipcodeData: ZipcodeData = {
@@ -41,6 +42,23 @@ test('Deve simular o frete para um pedido com CEP de origem e destino', async fu
             }
         }
     }
+    const calculateFreight = new CalculateFreight(productData, zipcodeData);
+    const input = {
+        from: '22030060',
+        to: '88015600',
+        items: [
+            { idProduct: 1, quantity: 1 }
+        ]
+    };
+    const output = await calculateFreight.execute(input);
+    expect(output.total).toBe(22.45);
+    await connection.close();
+})
+
+test('Deve simular o frete para um pedido com CEP de origem e destino usando banco de dados', async function () {
+    const connection = new PgPromiseConnection();
+    const productData = new ProductDataDatabase(connection);
+    const zipcodeData = new ZipcodeDataDatabase(connection);
     const calculateFreight = new CalculateFreight(productData, zipcodeData);
     const input = {
         from: '22030060',

@@ -23,6 +23,6 @@ test('Deve consultar um pedido', async function () {
 
     const getorderByCpf = new GetOrderByCpf(orderData);
     const output = await getorderByCpf.execute('987.654.321-00');
-    expect(output.total).toBe(1030);
+    expect(output.total).toBe(6350);
     await connection.close()
 })

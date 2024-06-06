@@ -1,11 +1,12 @@
 -- psql -d eccommerce_app -U app
 -- \i /docker-entrypoint-initdb.d/create.sql
 
-drop table eccommerce_app.product;
-drop table eccommerce_app.coupons;
-drop table eccommerce_app.order;
-drop table eccommerce_app.item;
-drop schema eccommerce_app;
+-- drop table eccommerce_app.zipcode;
+-- drop table eccommerce_app.product;
+-- drop table eccommerce_app.coupons;
+-- drop table eccommerce_app.order;
+-- drop table eccommerce_app.item;
+-- drop schema eccommerce_app;
 
 create schema eccommerce_app;
 
@@ -54,3 +55,14 @@ create table eccommerce_app.item (
     quantity integer,
     primary key (id_order, id_product)
 );
+
+create table eccommerce_app.zipcode (
+    code text primary key,
+    street text,
+    neighborhood text,
+    lat numeric,
+    long numeric
+);
+
+insert into eccommerce_app.zipcode (code, street, neighborhood, lat, long) values ('22030060', '', '', -27.5945, -48.5477);
+insert into eccommerce_app.zipcode (code, street, neighborhood, lat, long) values ('88015600', '', '', -22.9129, -43.2003);
