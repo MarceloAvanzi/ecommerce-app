@@ -4,6 +4,7 @@ import CLIHandlerMemory from "../../src/infrastructure/cli/CLIHandlerMemory";
 import CouponDataDatabase from "../../src/infrastructure/data/CouponDataDatabase";
 import OrderDataDatabase from "../../src/infrastructure/data/OrderDataDatabase";
 import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
+import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import sinon from 'sinon';
 
@@ -12,7 +13,8 @@ test('Deve testar o cli', async function () {
     const productData = new ProductDataDatabase(connection);
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData = new ZipcodeDataDatabase(connection);
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);

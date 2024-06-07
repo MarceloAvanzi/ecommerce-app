@@ -7,6 +7,12 @@ test('Deve calcular o frete com distancia padrao', function () {
     expect(freight).toBe(30)
 })
 
+test('Deve calcular o frete com distancia padrao', function () {
+    const product = new Product(2, 'B', 1000, 50, 50, 50, 22);
+    const freight = FreightCalculator.calculate(product)
+    expect(freight).toBe(220)
+})
+
 test('Deve calcular o frete minimo', function () {
     const product = new Product(3, 'C', 10, 10, 10, 10, 0.9)
     const freight = FreightCalculator.calculate(product)

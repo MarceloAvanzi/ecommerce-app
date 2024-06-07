@@ -10,9 +10,14 @@ import OrderCode from "../domain/entities/OrderCode";
 import OrderData from "../domain/data/OrderData";
 import ProductData from "../domain/data/ProductData";
 import { validate } from "../domain/entities/cpfValidator";
+import ZipcodeData from "../domain/data/ZipcodeData";
+import DistanceCalculator from "../domain/entities/DistanceCalculator";
+import CalculateFreight from "./CalculateFreight";
 // import { getCoupon, getProduct } from "./resource";
 
 type Input = {
+    from?: string,
+    to?: string,
     cpf: string,
     email?: string,
     items: { idProduct: number, quantity: number }[],
@@ -25,6 +30,7 @@ export default class Checkout {
         readonly productData: ProductData,
         readonly couponData: CouponData,
         readonly orderData: OrderData,
+        readonly zipcodeData: ZipcodeData,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
     ) { }
@@ -32,10 +38,16 @@ export default class Checkout {
     async execute(input: Input) {
         const currencies = await this.currencyGateway.getCurrencies()
         const order = new Order(input.cpf)
+
         for (const item of input.items) {
             const product = await this.productData.getProduct(item.idProduct)
             order.addItem(product, item.quantity, product.currency, currencies.getCurrency(product.currency))
         }
+
+        const calculateFreight = new CalculateFreight(this.productData, this.zipcodeData);
+        const freight = await calculateFreight.execute({ from: input.from, to: input.to, items: input.items });
+        order.freight = freight.total;
+
         if (input.coupon) {
             const coupon = await this.couponData.getCoupon(input.coupon)
             order.addCoupon(coupon)

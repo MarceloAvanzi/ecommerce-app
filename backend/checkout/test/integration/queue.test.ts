@@ -6,6 +6,7 @@ import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDataba
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import QueueController from "../../src/infrastructure/queue/QueueController";
 import QueueMemory from "../../src/infrastructure/queue/QueueMemory";
+import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
 
 test('Deve testar com a fila', async function () {
     const queue = new QueueMemory();
@@ -13,7 +14,8 @@ test('Deve testar com a fila', async function () {
     const productData = new ProductDataDatabase(connection);
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData = new ZipcodeDataDatabase(connection);
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     new QueueController(queue, checkout);
     const input = {
@@ -29,6 +31,6 @@ test('Deve testar com a fila', async function () {
     const [returnValue] = checkoutSpy.returnValues;
     const output = await returnValue;
     expect(output.code).toBe('202400000001')
-    expect(output.total).toBe(6350)
+    expect(output.total).toBe(6370)
     checkoutSpy.restore();
 });

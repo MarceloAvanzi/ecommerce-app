@@ -10,6 +10,8 @@ import ProductData from "../../src/domain/data/ProductData";
 import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
 import sinon from 'sinon';
 import Product from "../../src/domain/entities/Product";
+import ZipcodeData from "../../src/domain/data/ZipcodeData";
+import Zipcode from "../../src/domain/entities/Zipcode";
 
 test('Deve fazer um pedido com 3 produtos', async function () {
     const input = {
@@ -26,9 +28,9 @@ test('Deve fazer um pedido com 3 produtos', async function () {
     const productData: ProductData = {
         async getProduct(idProduct: number): Promise<Product> {
             const products: { [idProduct: number]: Product } = {
-                1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL' ),
-                2: new Product( 2, 'B', 5000, 50,  50, 50, 22,'BRL' ),
-                3: new Product( 3, 'C', 30, 10,  10, 10, 0.9, 'BRL' ),
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
             }
             return products[idProduct];
         }
@@ -52,10 +54,19 @@ test('Deve fazer um pedido com 3 produtos', async function () {
             return 1;
         }
     }
-
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const output = await checkout.execute(input);
-    expect(output.total).toBe(6350);
+    expect(output.total).toBe(6370);
 });
 
 test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy', async function () {
@@ -80,10 +91,10 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
     const productData: ProductData = {
         async getProduct(idProduct: number): Promise<Product> {
             const products: { [idProduct: number]: Product } = {
-                1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL' ),
-                2: new Product( 2, 'B', 5000, 50,  50, 50, 22,'BRL' ),
-                3: new Product( 3, 'C', 30, 10,  10, 10, 0.9, 'BRL' ),
-                4: new Product( 4, 'D', 100, 100, 30, 10, 3, 'USD' ),
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
+                4: new Product(4, 'D', 100, 100, 30, 10, 3, 'USD'),
             }
             return products[idProduct];
         }
@@ -107,9 +118,19 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
             return 1;
         }
     }
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const output = await checkout.execute(input);
-    expect(output.total).toBe(6580);
+    expect(output.total).toBe(6600);
     // expect(mailerSpy.calledOnce).toBeTruthy();
     // expect(mailerSpy.calledWith('marcelo@email.com', 'Checkout Success', 'ABCDEF')).toBeTruthy();
     currencyGatewayStub.restore();
@@ -145,10 +166,10 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
     const productData: ProductData = {
         async getProduct(idProduct: number): Promise<Product> {
             const products: { [idProduct: number]: Product } = {
-                1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL' ),
-                2: new Product( 2, 'B', 5000, 50,  50, 50, 22,'BRL' ),
-                3: new Product( 3, 'C', 30, 10,  10, 10, 0.9, 'BRL' ),
-                4: new Product( 4, 'D', 100, 100, 30, 10, 3, 'USD' ),
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
+                4: new Product(4, 'D', 100, 100, 30, 10, 3, 'USD'),
             }
             return products[idProduct];
         }
@@ -173,9 +194,20 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
         }
     }
 
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const output = await checkout.execute(input);
-    expect(output.total).toBe(6580);
+    expect(output.total).toBe(6600);
     currencyGatewayMock.restore();
     currencyGatewayMock.verify();
     // mailerMock.verify();
@@ -199,10 +231,10 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
     const productData: ProductData = {
         async getProduct(idProduct: number): Promise<Product> {
             const products: { [idProduct: number]: Product } = {
-                1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL' ),
-                2: new Product( 2, 'B', 5000, 50,  50, 50, 22,'BRL' ),
-                3: new Product( 3, 'C', 30, 10,  10, 10, 0.9, 'BRL' ),
-                4: new Product( 4, 'D', 100, 100, 30, 10, 3, 'USD' ),
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
+                4: new Product(4, 'D', 100, 100, 30, 10, 3, 'USD'),
             }
             return products[idProduct];
         }
@@ -243,9 +275,20 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
         }
     }
 
-    const checkout = new Checkout(productData, couponData, orderData, currencyGateway, mailer);
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData, currencyGateway, mailer);
     const output = await checkout.execute(input);
-    expect(output.total).toBe(6580);
+    expect(output.total).toBe(6600);
     // expect(log).toHaveLength(1);
     // expect(log[0].to).toBe('marcelo@email.com');
     // expect(log[0].subject).toBe('Checkout Success');
@@ -267,9 +310,9 @@ test('Deve fazer um pedido com 3 produtos com código do pedido', async function
     const productData: ProductData = {
         async getProduct(idProduct: number): Promise<Product> {
             const products: { [idProduct: number]: Product } = {
-                1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL' ),
-                2: new Product( 2, 'B', 5000, 50,  50, 50, 22,'BRL' ),
-                3: new Product( 3, 'C', 30, 10,  10, 10, 0.9, 'BRL' ),
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
             }
             return products[idProduct];
         }
@@ -294,7 +337,78 @@ test('Deve fazer um pedido com 3 produtos com código do pedido', async function
         }
     }
 
-    const checkout = new Checkout(productData, couponData, orderData);
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
     const output = await checkout.execute(input);
     expect(output.code).toBe('202400000001');
+});
+
+test('Deve fazer um pedido com 3 produtos com CEP de origem e destino', async function () {
+    const input = {
+        from: '22030060',
+        to: '88015600',
+        cpf: '987.654.321-00',
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 },
+        ]
+    };
+
+    // const productData = new ProductDataDatabase();
+    // const couponData = new CouponDataDatabase();
+    const productData: ProductData = {
+        async getProduct(idProduct: number): Promise<Product> {
+            const products: { [idProduct: number]: Product } = {
+                1: new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+                2: new Product(2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
+                3: new Product(3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
+            }
+            return products[idProduct];
+        }
+    }
+    const couponData: CouponData = {
+        async getCoupon(code: string): Promise<any> {
+            const coupons: { [code: string]: any } = {
+                'VALE20': { code: 'VALE20', percentage: 20, expire_date: new Date('2024-12-01T10:00:00') },
+                'VALE20_EXPIRED': { code: 'VALE20_EXPIRED', percentage: 20, expire_date: new Date('2024-03-01T10:00:00') },
+            }
+            return coupons[code];
+        }
+    }
+
+    const orderData: OrderData = {
+        async save(order: any): Promise<void> {
+        },
+        async getByCpf(cpf: string): Promise<any> {
+        },
+        async count(): Promise<number> {
+            return 1;
+        }
+    }
+
+    const zipcodeData: ZipcodeData = {
+        async get(code: string): Promise<Zipcode | undefined> {
+            if (code === '22030060') {
+                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
+            }
+            if (code === '88015600') {
+                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
+            }
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
+    const output = await checkout.execute(input);
+    expect(output.total).toBe(6307.06);
 });
