@@ -1,19 +1,12 @@
-import Coupon from "../domain/entities/Coupon";
 import CouponData from "../domain/data/CouponData";
 import CurrencyGatewayRandom from "../infrastructure/gateway/CurrencyGatewayRandom";
 import CurrencyGateway from "../infrastructure/gateway/CurrencyGatewayRandom";
-import FreightCalculator from "../domain/entities/FreightCalculator";
 import MailerConsole from "../infrastructure/mailer/MailerConsole";
 import Mailer from "../infrastructure/mailer/MailerConsole";
 import Order from "../domain/entities/Order";
-import OrderCode from "../domain/entities/OrderCode";
 import OrderData from "../domain/data/OrderData";
 import ProductData from "../domain/data/ProductData";
-import { validate } from "../domain/entities/cpfValidator";
-import ZipcodeData from "../domain/data/ZipcodeData";
-import DistanceCalculator from "../domain/entities/DistanceCalculator";
 import CalculateFreight from "./CalculateFreight";
-// import { getCoupon, getProduct } from "./resource";
 
 type Input = {
     from?: string,
@@ -30,7 +23,7 @@ export default class Checkout {
         readonly productData: ProductData,
         readonly couponData: CouponData,
         readonly orderData: OrderData,
-        readonly zipcodeData: ZipcodeData,
+        readonly calculateFreight: CalculateFreight,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
     ) { }
@@ -44,8 +37,7 @@ export default class Checkout {
             order.addItem(product, item.quantity, product.currency, currencies.getCurrency(product.currency))
         }
 
-        const calculateFreight = new CalculateFreight(this.productData, this.zipcodeData);
-        const freight = await calculateFreight.execute({ from: input.from, to: input.to, items: input.items });
+        const freight = await this.calculateFreight.execute({ from: input.from, to: input.to, items: input.items });
         order.freight = freight.total;
 
         if (input.coupon) {

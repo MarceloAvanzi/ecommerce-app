@@ -5,6 +5,7 @@ import OrderDataDatabase from "../../src/infrastructure/data/OrderDataDatabase";
 import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
+import CalculateFreight from "../../src/application/CalculateFreight";
 
 test('Deve consultar um pedido', async function () {
     const connection = new PgPromiseConnection();
@@ -12,7 +13,8 @@ test('Deve consultar um pedido', async function () {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const zipcodeData = new ZipcodeDataDatabase(connection);
-    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
+    const calculateFreight = new CalculateFreight(productData, zipcodeData);
+    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
     const input = {
         cpf: '987.654.321-00',
         items: [

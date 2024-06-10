@@ -7,6 +7,7 @@ import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConn
 import QueueController from "../../src/infrastructure/queue/QueueController";
 import QueueMemory from "../../src/infrastructure/queue/QueueMemory";
 import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
+import CalculateFreight from "../../src/application/CalculateFreight";
 
 test('Deve testar com a fila', async function () {
     const queue = new QueueMemory();
@@ -15,7 +16,8 @@ test('Deve testar com a fila', async function () {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const zipcodeData = new ZipcodeDataDatabase(connection);
-    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
+    const calculateFreight = new CalculateFreight(productData, zipcodeData);
+    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     new QueueController(queue, checkout);
     const input = {

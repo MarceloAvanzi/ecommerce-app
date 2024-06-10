@@ -1,3 +1,4 @@
+import CalculateFreight from "../../src/application/CalculateFreight";
 import Checkout from "../../src/application/Checkout";
 import CLIController from "../../src/infrastructure/cli/CLIController";
 import CLIHandlerMemory from "../../src/infrastructure/cli/CLIHandlerMemory";
@@ -14,7 +15,8 @@ test('Deve testar o cli', async function () {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const zipcodeData = new ZipcodeDataDatabase(connection);
-    const checkout = new Checkout(productData, couponData, orderData, zipcodeData);
+    const calculateFreight = new CalculateFreight(productData, zipcodeData);
+    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);
