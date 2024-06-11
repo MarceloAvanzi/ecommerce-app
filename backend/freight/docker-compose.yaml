@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: pg
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: eccommerce_app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql 
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  postgres-data:
+    driver: local
