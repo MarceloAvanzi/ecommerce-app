@@ -1,7 +1,3 @@
-import Checkout from "./application/Checkout";
-import ProductDataDatabase from "./infrastructure/data/ProductDataDatabase";
-import CouponDataDatabase from "./infrastructure/data/CouponDataDatabase";
-import OrderDataDatabase from "./infrastructure/data/OrderDataDatabase";
 import PgPromiseConnection from "./infrastructure/database/PgPromiseConnection";
 import ExpressHttpServer from "./infrastructure/http/ExpressHttpServer";
 import RestController from "./infrastructure/controller/RestController";
@@ -10,11 +6,7 @@ import CalculateFreight from "./application/CalculateFreight";
 
 const connection = new PgPromiseConnection();
 const httpServer = new ExpressHttpServer();
-const productData = new ProductDataDatabase(connection);
-const couponData = new CouponDataDatabase(connection);
-const orderData = new OrderDataDatabase(connection);
 const zipcodeData = new ZipcodeDataDatabase(connection);
-const calculateFreight = new CalculateFreight(productData, zipcodeData);
-const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
-new RestController(httpServer, checkout);
+const calculateFreight = new CalculateFreight(zipcodeData);
+new RestController(httpServer, calculateFreight);
 httpServer.listen(3000);
