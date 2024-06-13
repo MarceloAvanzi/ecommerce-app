@@ -8,8 +8,6 @@ import OrderData from "../../src/domain/data/OrderData";
 import ProductData from "../../src/domain/data/ProductData";
 import sinon from 'sinon';
 import Product from "../../src/domain/entities/Product";
-import ZipcodeData from "../../src/domain/data/ZipcodeData";
-import Zipcode from "../../src/domain/entities/Zipcode";
 import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
 
 test('Deve fazer um pedido com 3 produtos', async function () {
@@ -53,16 +51,7 @@ test('Deve fazer um pedido com 3 produtos', async function () {
             return 1;
         }
     }
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
-        }
-    }
+
     const freightGateway = new FreightGatewayHttp();
     const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
@@ -118,16 +107,7 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
             return 1;
         }
     }
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
-        }
-    }
+
     const freightGateway = new FreightGatewayHttp();
     const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
@@ -192,17 +172,6 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
         },
         async count(): Promise<number> {
             return 1;
-        }
-    }
-
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
         }
     }
 
@@ -277,16 +246,6 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
         }
     }
 
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
-        }
-    }
     const freightGateway = new FreightGatewayHttp();
     const checkout = new Checkout(productData, couponData, orderData, freightGateway, currencyGateway, mailer);
     const output = await checkout.execute(input);
@@ -339,17 +298,6 @@ test('Deve fazer um pedido com 3 produtos com código do pedido', async function
         }
     }
 
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
-        }
-    }
-
     const freightGateway = new FreightGatewayHttp();
     const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
@@ -397,17 +345,6 @@ test('Deve fazer um pedido com 3 produtos com CEP de origem e destino', async fu
         },
         async count(): Promise<number> {
             return 1;
-        }
-    }
-
-    const zipcodeData: ZipcodeData = {
-        async get(code: string): Promise<Zipcode | undefined> {
-            if (code === '22030060') {
-                return new Zipcode('22030060', '', '', -27.5945, -48.5477)
-            }
-            if (code === '88015600') {
-                return new Zipcode('88015600', '', '', -22.9129, -43.2003)
-            }
         }
     }
 
