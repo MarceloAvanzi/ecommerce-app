@@ -1,18 +1,16 @@
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
-import CouponDataDatabase from "../../src/infrastructure/data/CouponDataDatabase";
 import Currencies from "../../src/domain/entities/Currencies";
 import CurrencyGateway from "../../src/infrastructure/gateway/CurrencyGatewayRandom";
 import Mailer from "../../src/infrastructure/mailer/Mailer";
 import MailerConsole from "../../src/infrastructure/mailer/MailerConsole";
 import OrderData from "../../src/domain/data/OrderData";
 import ProductData from "../../src/domain/data/ProductData";
-import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDatabase";
 import sinon from 'sinon';
 import Product from "../../src/domain/entities/Product";
 import ZipcodeData from "../../src/domain/data/ZipcodeData";
 import Zipcode from "../../src/domain/entities/Zipcode";
-import CalculateFreight from "../../src/application/CalculateFreight";
+import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
 
 test('Deve fazer um pedido com 3 produtos', async function () {
     const input = {
@@ -65,8 +63,8 @@ test('Deve fazer um pedido com 3 produtos', async function () {
             }
         }
     }
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6370);
 });
@@ -130,8 +128,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
             }
         }
     }
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     // expect(mailerSpy.calledOnce).toBeTruthy();
@@ -208,8 +206,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
         }
     }
 
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     currencyGatewayMock.restore();
@@ -289,8 +287,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
             }
         }
     }
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight, currencyGateway, mailer);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway, currencyGateway, mailer);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     // expect(log).toHaveLength(1);
@@ -352,8 +350,8 @@ test('Deve fazer um pedido com 3 produtos com código do pedido', async function
         }
     }
 
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.code).toBe('202400000001');
 });
@@ -413,8 +411,8 @@ test('Deve fazer um pedido com 3 produtos com CEP de origem e destino', async fu
         }
     }
 
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6307.06);
 });

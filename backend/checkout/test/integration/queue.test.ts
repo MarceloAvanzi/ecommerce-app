@@ -6,8 +6,7 @@ import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDataba
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import QueueController from "../../src/infrastructure/queue/QueueController";
 import QueueMemory from "../../src/infrastructure/queue/QueueMemory";
-import ZipcodeDataDatabase from "../../src/infrastructure/data/ZipcodeDataDatabase";
-import CalculateFreight from "../../src/application/CalculateFreight";
+import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
 
 test('Deve testar com a fila', async function () {
     const queue = new QueueMemory();
@@ -15,9 +14,8 @@ test('Deve testar com a fila', async function () {
     const productData = new ProductDataDatabase(connection);
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
-    const zipcodeData = new ZipcodeDataDatabase(connection);
-    const calculateFreight = new CalculateFreight(productData, zipcodeData);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     new QueueController(queue, checkout);
     const input = {
