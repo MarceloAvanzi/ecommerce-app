@@ -8,7 +8,7 @@ test('Deve calcular o frete', async function () {
             { volume: 0.03, density: 100, quantity: 1 }
         ]
     };
-    const response = await axios.post('http://localhost:3000/calculate_freight', input);
+    const response = await axios.post('http://localhost:3001/calculate_freight', input);
     const output = response.data;
     expect(output.total).toBe(22.45);
 });

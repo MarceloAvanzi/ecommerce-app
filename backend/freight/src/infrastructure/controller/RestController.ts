@@ -2,9 +2,9 @@ import CalculateFreight from "../../application/CalculateFreight";
 import HttpServer from "../http/HttpServer";
 
 export default class RestController {
-    constructor(readonly httpServer: HttpServer, readonly calculateFreght: CalculateFreight) {
+    constructor(readonly httpServer: HttpServer, readonly calculateFreight: CalculateFreight) {
         httpServer.on('post', '/calculate_freight', async function (params: any, body: any) {
-            const output = await calculateFreght.execute(body);
+            const output = await calculateFreight.execute(body);
             return output;
         });
     };

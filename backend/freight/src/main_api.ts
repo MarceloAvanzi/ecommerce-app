@@ -9,4 +9,4 @@ const httpServer = new ExpressHttpServer();
 const zipcodeData = new ZipcodeDataDatabase(connection);
 const calculateFreight = new CalculateFreight(zipcodeData);
 new RestController(httpServer, calculateFreight);
-httpServer.listen(3000);
+httpServer.listen(3001)

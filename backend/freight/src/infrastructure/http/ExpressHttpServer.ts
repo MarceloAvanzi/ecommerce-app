@@ -25,6 +25,8 @@ export default class ExpressHttpServer implements HttpServer {
     }
 
     listen(port: number): void {
-        return this.app.listen(port);
+        this.app.listen(port)
+        console.log('Listening on port: ', port)
+        return
     }
 }
