@@ -7,6 +7,7 @@ import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConn
 import QueueController from "../../src/infrastructure/queue/QueueController";
 import QueueMemory from "../../src/infrastructure/queue/QueueMemory";
 import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infrastructure/gateway/CatalogGatewayHttp";
 
 test('Deve testar com a fila', async function () {
     const queue = new QueueMemory();
@@ -15,7 +16,8 @@ test('Deve testar com a fila', async function () {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     new QueueController(queue, checkout);
     const input = {

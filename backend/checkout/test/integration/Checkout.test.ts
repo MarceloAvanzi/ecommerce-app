@@ -9,6 +9,7 @@ import ProductData from "../../src/domain/data/ProductData";
 import sinon from 'sinon';
 import Product from "../../src/domain/entities/Product";
 import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infrastructure/gateway/CatalogGatewayHttp";
 
 test('Deve fazer um pedido com 3 produtos', async function () {
     const input = {
@@ -53,7 +54,8 @@ test('Deve fazer um pedido com 3 produtos', async function () {
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6370);
 });
@@ -109,7 +111,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com stub e spy',
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     // expect(mailerSpy.calledOnce).toBeTruthy();
@@ -176,7 +179,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com mock', async
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     currencyGatewayMock.restore();
@@ -247,7 +251,8 @@ test('Deve fazer um pedido com 4 produtos com moedas diferentes com fake', async
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway, currencyGateway, mailer);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway, currencyGateway, mailer);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6600);
     // expect(log).toHaveLength(1);
@@ -299,7 +304,8 @@ test('Deve fazer um pedido com 3 produtos com código do pedido', async function
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.code).toBe('202400000001');
 });
@@ -349,7 +355,8 @@ test('Deve fazer um pedido com 3 produtos com CEP de origem e destino', async fu
     }
 
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toBe(6307.06);
 });

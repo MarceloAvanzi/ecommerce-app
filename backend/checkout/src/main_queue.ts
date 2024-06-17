@@ -6,6 +6,7 @@ import PgPromiseConnection from './infrastructure/database/PgPromiseConnection';
 import RabbitMQAdapter from './infrastructure/queue/RabbitMQAdapter';
 import QueueController from './infrastructure/queue/QueueController';
 import FreightGatewayHttp from './infrastructure/gateway/FreightGatewayHttp';
+import CatalogGatewayHttp from './infrastructure/gateway/CatalogGatewayHttp';
 
 async function init() {
     const queue = new RabbitMQAdapter();
@@ -15,7 +16,8 @@ async function init() {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     new QueueController(queue, checkout);
 }
 

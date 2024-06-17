@@ -7,6 +7,7 @@ import ProductDataDatabase from "../../src/infrastructure/data/ProductDataDataba
 import PgPromiseConnection from "../../src/infrastructure/database/PgPromiseConnection";
 import sinon from 'sinon';
 import FreightGatewayHttp from "../../src/infrastructure/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infrastructure/gateway/CatalogGatewayHttp";
 
 test('Deve testar o cli', async function () {
     const connection = new PgPromiseConnection();
@@ -14,7 +15,8 @@ test('Deve testar o cli', async function () {
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const freightGateway = new FreightGatewayHttp();
-    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
+    const catalogGateway = new CatalogGatewayHttp()
+    const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
     const checkoutSpy = sinon.spy(checkout, 'execute');
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);

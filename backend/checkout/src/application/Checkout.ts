@@ -7,6 +7,7 @@ import Order from "../domain/entities/Order";
 import OrderData from "../domain/data/OrderData";
 import ProductData from "../domain/data/ProductData";
 import FreightGateway from "../infrastructure/gateway/FreightGateway";
+import CatalogGateway from "../infrastructure/gateway/CatalogGateway";
 
 type Input = {
     from?: string,
@@ -20,7 +21,7 @@ type Input = {
 export default class Checkout {
 
     constructor(
-        readonly productData: ProductData,
+        readonly catalogGateway: CatalogGateway,
         readonly couponData: CouponData,
         readonly orderData: OrderData,
         readonly freightGateway: FreightGateway,
@@ -34,7 +35,7 @@ export default class Checkout {
         const freightItems: { volume: number, density: number, quantity: number }[] = [];
 
         for (const item of input.items) {
-            const product = await this.productData.getProduct(item.idProduct)
+            const product = await this.catalogGateway.getProduct(item.idProduct)
             order.addItem(product, item.quantity, product.currency, currencies.getCurrency(product.currency))
             freightItems.push({ volume: product.getVolume(), density: product.getDensity(), quantity: item.quantity })
         }
