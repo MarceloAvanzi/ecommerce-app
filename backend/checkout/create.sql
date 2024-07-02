@@ -1,7 +1,7 @@
 -- psql -d eccommerce_app -U app
 -- \i /docker-entrypoint-initdb.d/create.sql
 
--- drop table eccommerce_app.stock_entry;
+drop table eccommerce_app.stock_entry;
 drop table eccommerce_app.zipcode;
 drop table eccommerce_app.product;
 drop table eccommerce_app.coupons;
