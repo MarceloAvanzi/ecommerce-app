@@ -8,6 +8,7 @@ import OrderData from "../domain/data/OrderData";
 import ProductData from "../domain/data/ProductData";
 import FreightGateway from "../infrastructure/gateway/FreightGateway";
 import CatalogGateway from "../infrastructure/gateway/CatalogGateway";
+import StockGateway from "../infrastructure/gateway/StockGateway";
 
 type Input = {
     from?: string,
@@ -25,8 +26,8 @@ export default class Checkout {
         readonly couponData: CouponData,
         readonly orderData: OrderData,
         readonly freightGateway: FreightGateway,
+        readonly stockGateway: StockGateway,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
-        readonly mailer: Mailer = new MailerConsole(),
     ) { }
 
     async execute(input: Input) {
@@ -49,6 +50,7 @@ export default class Checkout {
         }
 
         await this.orderData.save(order)
+        await this.stockGateway.decreaseStock(input);
         return {
             code: order.getCode(),
             total: order.getTotal(),

@@ -7,6 +7,7 @@ import ProductDataDatabase from "./infrastructure/data/ProductDataDatabase";
 import PgPromiseConnection from "./infrastructure/database/PgPromiseConnection";
 import CatalogGatewayHttp from "./infrastructure/gateway/CatalogGatewayHttp";
 import FreightGatewayHttp from "./infrastructure/gateway/FreightGatewayHttp";
+import StockGatewayHttp from "./infrastructure/gateway/StockGatewatHttp";
 
 const connection = new PgPromiseConnection();
 const productData = new ProductDataDatabase(connection);
@@ -14,6 +15,7 @@ const couponData = new CouponDataDatabase(connection);
 const orderData = new OrderDataDatabase(connection);
 const freightGateway = new FreightGatewayHttp();
 const catalogGateway = new CatalogGatewayHttp()
-const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
+const stockGateway = new StockGatewayHttp();
+const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway, stockGateway);
 const handler = new CLIHandlerNode();
 new CLIController(handler, checkout);
