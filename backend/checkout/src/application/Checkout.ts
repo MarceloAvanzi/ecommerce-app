@@ -6,6 +6,8 @@ import OrderData from "../domain/data/OrderData";
 import FreightGateway from "../infrastructure/gateway/FreightGateway";
 import CatalogGateway from "../infrastructure/gateway/CatalogGateway";
 import StockGateway from "../infrastructure/gateway/StockGateway";
+import Queue from "../infrastructure/queue/Queue";
+import QueueMemory from "../infrastructure/queue/QueueMemory";
 
 type Input = {
     from?: string,
@@ -24,6 +26,7 @@ export default class Checkout {
         readonly orderData: OrderData,
         readonly freightGateway: FreightGateway,
         readonly stockGateway: StockGateway,
+        readonly queue: Queue = new QueueMemory(),
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
     ) { }
 
@@ -47,7 +50,15 @@ export default class Checkout {
         }
 
         await this.orderData.save(order)
-        await this.stockGateway.decreaseStock(input);
+        // option 1
+        // await this.stockGateway.decreaseStock(input);
+
+        // option 2
+        // await this.queue.publish('decreaseStock', input);
+
+        // option 3
+        await this.queue.publish('orderPlaced', input);
+
         return {
             code: order.getCode(),
             total: order.getTotal(),
