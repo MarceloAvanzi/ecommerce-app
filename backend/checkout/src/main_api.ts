@@ -9,6 +9,7 @@ import FreightGatewayHttp from "./infrastructure/gateway/FreightGatewayHttp";
 import CatalogGatewayHttp from "./infrastructure/gateway/CatalogGatewayHttp";
 import StockGatewayHttp from "./infrastructure/gateway/StockGatewatHttp";
 import RabbitMQAdapter from "./infrastructure/queue/RabbitMQAdapter";
+import QueueController from "./infrastructure/queue/QueueController";
 
 async function main() {
     const connection = new PgPromiseConnection();
@@ -22,7 +23,8 @@ async function main() {
     const queue = new RabbitMQAdapter();
     await queue.connect();
     const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway, stockGateway, queue);
-    new RestController(httpServer, checkout);
+    new RestController(httpServer, checkout, queue);
+    new QueueController(queue, checkout);
     httpServer.listen(3000);
 }
 
