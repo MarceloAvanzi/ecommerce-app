@@ -1,5 +1,4 @@
 import Checkout from "./application/Checkout";
-import ProductDataDatabase from "./infrastructure/data/ProductDataDatabase";
 import CouponDataDatabase from "./infrastructure/data/CouponDataDatabase";
 import OrderDataDatabase from "./infrastructure/data/OrderDataDatabase";
 import PgPromiseConnection from "./infrastructure/database/PgPromiseConnection";
@@ -14,7 +13,6 @@ import QueueController from "./infrastructure/queue/QueueController";
 async function main() {
     const connection = new PgPromiseConnection();
     const httpServer = new ExpressHttpServer();
-    const productData = new ProductDataDatabase(connection);
     const couponData = new CouponDataDatabase(connection);
     const orderData = new OrderDataDatabase(connection);
     const freightGateway = new FreightGatewayHttp();
