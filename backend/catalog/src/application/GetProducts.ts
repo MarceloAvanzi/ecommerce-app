@@ -12,7 +12,7 @@ export default class GetProducts {
         }))
     }
 }
-
+ 
 type Output = {
     idProduct: number,
     description: string,
